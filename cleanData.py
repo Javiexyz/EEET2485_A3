@@ -17,4 +17,6 @@ dataClean.loc[dataClean['Workclass'].astype(str) == '?', 'Workclass'] = mostFreq
 dataClean.loc[dataClean['Occupation'].astype(str) == '?', 'Occupation'] = mostFreqOccupation
 dataClean.loc[dataClean['Native country'].astype(str) == '?', 'Native country'] = mostFreqCountry
 
-dataClean.to_csv("data_clean/workclass.csv")
+dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
+
+dataClean.to_csv("data_clean/dataclean.csv")
