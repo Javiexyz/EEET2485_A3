@@ -16,8 +16,8 @@ mostFreqWorkclass = workclassVar[np.argmax(workclassCount, axis = 0)]
 mostFreqOccupation = occupationVar[np.argmax(occupationCount, axis = 0)]
 mostFreqCountry = countryVar[np.argmax(countryCount, axis = 0)]
 
-dataClean.loc[dataClean['Workclass'].astype(str) == '?', 'Workclass'] = mostFreqWorkclass
-dataClean.loc[dataClean['Occupation'].astype(str) == '?', 'Occupation'] = mostFreqOccupation
+dataClean.loc[dataClean['Workclass'].astype(str) == '?', 'Workclass'] = 'Other'
+dataClean.loc[dataClean['Occupation'].astype(str) == '?', 'Occupation'] = 'Other'
 dataClean.loc[dataClean['Native country'].astype(str) == '?', 'Native country'] = mostFreqCountry
 
 dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
