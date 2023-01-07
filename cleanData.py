@@ -35,8 +35,12 @@ for item in plotArray:
     plt.bar(var, count)
     plt.savefig(f'plot/{item}.png')
 
-# workclassVar, workclassCount = np.unique(dataClean['Workclass'].astype(str), return_counts = True)
-# plt.figure(figsize=(15, 5))
-# plt.title('Workclass plot')
-# plt.bar(workclassVar, workclassCount)
-# plt.savefig('plot/workclass.png')
+workclassVar, workclassCount = np.unique(dataClean['Workclass'].astype(str), return_counts = True)
+plt.figure(figsize=(15, 10))
+plt.title('Workclass plot')
+plt.bar(workclassVar, workclassCount)
+for index, value in enumerate(workclassCount):
+    plt.text(index, value,
+             str(value))
+
+plt.savefig('plot/workclass.png')
