@@ -432,8 +432,6 @@
 439,42.0,Local-gov,Some-college,10.0,"Married-civ-spouse,",Adm-clerical,Wife,White,Female,40.0,United-States,<=50K,2.0,0.0,0.0
 441,45.0,Private,HS-grad,9.0,"Divorced,",Adm-clerical,Not-in-family,White,Female,28.0,United-States,<=50K,1.0,1.0,1.0
 442,24.0,Federal-gov,HS-grad,9.0,"Never-married,",Armed-Forces,Own-child,White,Male,40.0,United-States,<=50K,1.0,1.0,1.0
-443,44.0,Private,Some-college,10.0,"Married-civ-spouse,",Prof-specialty,Husband,White,Male,40.0,United-States,>50K,5.0,0.0,
-444,27.0,Private,9th,5.0,"Never-married,",Craft-repair,Other-relative,White,Male,40.0,Mexico,<=50K,1.0,1.0,
 445,20.0,Private,Some-college,10.0,"Never-married,",Sales,Not-in-family,White,Male,35.0,United-States,<=50K,1.0,0.0,0.0
 446,44.0,Private,HS-grad,9.0,"Widowed,",Exec-managerial,Unmarried,Black,Female,40.0,United-States,<=50K,5.0,0.0,0.0
 447,51.0,Private,HS-grad,9.0,"Married-civ-spouse,",Craft-repair,Husband,Amer-Indian-Eskimo,Male,40.0,United-States,<=50K,0.0,1.0,1.0
