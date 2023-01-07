@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
+
+# ---------- Clean data ---------- #
+
 dataClean = data.copy()
 
 workclassVar, workclassCount = np.unique(data['Workclass'].astype(str), return_counts = True)
@@ -18,5 +21,22 @@ dataClean.loc[dataClean['Occupation'].astype(str) == '?', 'Occupation'] = mostFr
 dataClean.loc[dataClean['Native country'].astype(str) == '?', 'Native country'] = mostFreqCountry
 
 dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
+dataClean.drop(dataClean.tail(1).index, inplace=True)
 
 dataClean.to_csv("data_clean/dataclean.csv")
+
+# ---------- Plot data ---------- #
+
+plotArray = ["Workclass", "Age", "Occupation", "Work hours per week"]
+for item in plotArray:
+    var, count = np.unique(dataClean[f'{item}'], return_counts = True)
+    plt.figure(figsize=(32, 8))
+    plt.title(f'{item} plot')
+    plt.bar(var, count)
+    plt.savefig(f'plot/{item}.png')
+
+# workclassVar, workclassCount = np.unique(dataClean['Workclass'].astype(str), return_counts = True)
+# plt.figure(figsize=(15, 5))
+# plt.title('Workclass plot')
+# plt.bar(workclassVar, workclassCount)
+# plt.savefig('plot/workclass.png')
