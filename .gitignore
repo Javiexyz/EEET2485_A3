@@ -161,3 +161,5 @@ data_record/
 data_clean/
 plot/
 plotIncome/
+
+*.png
