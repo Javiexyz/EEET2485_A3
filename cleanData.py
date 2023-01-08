@@ -18,6 +18,8 @@ mostFreqCountry = countryVar[np.argmax(countryCount, axis = 0)]
 
 dataClean.loc[dataClean['Workclass'].astype(str) == '?', 'Workclass'] = 'Other'
 dataClean.loc[dataClean['Occupation'].astype(str) == '?', 'Occupation'] = 'Other'
+dataClean.loc[dataClean['Income'].astype(str) == '>50K', 'Income'] = '1'
+dataClean.loc[dataClean['Income'].astype(str) == '<=50K', 'Income'] = '0'
 dataClean.loc[dataClean['Native country'].astype(str) == '?', 'Native country'] = mostFreqCountry
 
 dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
