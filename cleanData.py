@@ -28,11 +28,11 @@ dataClean.to_csv("data_clean/dataclean.csv")
 
 # ---------- Plot data ---------- #
 
+useHistplot = ["Age"]
 hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
 hasExtraHeight = ["Native country"]
 hasVerticalLabel = ["Native country"]
 hasCount = ["Workclass", "Race", "Work hours per week", "Other asset"]
-histPlot = ["Age"]
 
 for item in dataClean.columns.values:
 
@@ -42,9 +42,7 @@ for item in dataClean.columns.values:
         var, count = np.unique(dataClean[f'{item}'], return_counts = True)
 
     # Set size of the plot
-    if (item in histPlot):
-        figSize=(20,9)
-    elif (item in hasBinaryLabel):
+    if (item in hasBinaryLabel):
         figSize=(7, 7)
     elif (item in hasExtraHeight): 
         figSize=(12, 19)
@@ -57,8 +55,8 @@ for item in dataClean.columns.values:
     fig, ax = plt.subplots(figsize=figSize)
     ax.set_title(f'{item} plot')
 
-    if (item in histPlot):
-        ax.bar(var, count)
+    if (item in useHistplot):
+        sns.histplot(data=dataClean[f'{item}'], binwidth=1, kde=True)
     else:
         sns.barplot(x=var, y=count)
 
