@@ -155,3 +155,9 @@ cython_debug/
 .idea/Research Group Assignment.iml
 .idea/vcs.xml
 .idea/misc.xml
+
+#Generated file (cleaned data, plot, ...)
+data_record/
+data_clean/
+plot/
+plotIncome/
