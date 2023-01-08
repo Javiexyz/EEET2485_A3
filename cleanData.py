@@ -9,6 +9,11 @@ data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
 
 dataClean = data.copy()
 
+# Drop
+dataClean.dropna(inplace=True)
+dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
+
+# Replace
 workclassVar, workclassCount = np.unique(data['Workclass'].astype(str), return_counts = True)
 occupationVar, occupationCount = np.unique(data['Occupation'].astype(str), return_counts = True)
 countryVar, countryCount = np.unique(data['Native country'].astype(str), return_counts = True)
@@ -23,25 +28,28 @@ dataClean.loc[dataClean['Income'].astype(str) == '>50K', 'Income'] = '1'
 dataClean.loc[dataClean['Income'].astype(str) == '<=50K', 'Income'] = '0'
 dataClean.loc[dataClean['Native country'].astype(str) == '?', 'Native country'] = mostFreqCountry
 
-dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
-dataClean.dropna(inplace=True)
+dataClean['Martial status'] = dataClean['Martial status'].replace(",", "", regex = True)
 
 dataClean.to_csv("data_clean/dataclean.csv")
 
 # ---------- Plot data ---------- #
 
-useHistplot = ["Age"]
+# Set style for plot
+sns.set_theme(style="darkgrid")
+sns.set_palette("Set2")
+
+useHistplot = ["Age", 'Work hours per week']
 hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
 hasExtraHeight = ["Native country"]
 hasVerticalLabel = ["Native country"]
-hasCount = ["Workclass", "Race", "Work hours per week", "Other asset"]
+hasCount = ["Workclass", "Race", "Other asset"]
 
 for item in dataClean.columns.values:
 
-    if (item in hasBinaryLabel):
-        var, count = np.unique(dataClean[f'{item}'].astype(str), return_counts = True)
-    else:
-        var, count = np.unique(dataClean[f'{item}'], return_counts = True)
+    # if (item in hasBinaryLabel):
+    #     var, count = np.unique(dataClean[f'{item}'].astype(str), return_counts = True)
+    # else:
+    var, count = np.unique(dataClean[f'{item}'], return_counts = True)
 
     # Set size of the plot
     if (item in hasBinaryLabel):
@@ -51,14 +59,18 @@ for item in dataClean.columns.values:
     else:
         figSize=(16, 9)
 
-    sns.set_palette("Set2")
-
     # Common
     fig, ax = plt.subplots(figsize=figSize)
     ax.set_title(f'{item} plot')
 
     if (item in useHistplot):
-        sns.histplot(data=dataClean[f'{item}'], binwidth=1, kde=True)
+        if (item == 'Work hours per week'):
+            binWidth = 10
+            kde = False
+        else:
+            binWidth = 1
+            kde = True
+        sns.histplot(data=dataClean[f'{item}'], binwidth=binWidth, kde=kde)
     else:
         sns.barplot(x=var, y=count)
 
@@ -74,12 +86,23 @@ for item in dataClean.columns.values:
     # Save to image
     fig.savefig(f'plot/{item}.png')
 
-# workclassVar, workclassCount = np.unique(dataClean['Workclass'].astype(str), return_counts = True)
-# plt.figure(figsize=(15, 10))
-# plt.title('Workclass plot')
-# plt.bar(workclassVar, workclassCount)
-# for index, value in enumerate(workclassCount):
-#     plt.text(index, value,
-#              str(value))
+dataClean_categorical = dataClean.select_dtypes(exclude=['float'])
 
-# plt.savefig('plot/workclass.png')
+sns.set_theme(style="darkgrid")
+sns.set_palette("Set2")
+
+for col in dataClean_categorical.columns:
+    g = sns.catplot(x=col, hue='Income',
+                data=dataClean, kind="count",
+                height=8, aspect=1.7)
+    g.fig.set_size_inches(15, 8)
+    
+    for ax in g.axes.ravel():
+    # add annotations
+        for c in ax.containers:
+            labels = [f'{(v.get_height() / 1000):.1f}K' for v in c]
+            ax.bar_label(c, labels=labels, label_type='edge')
+            ax.margins(y=0.2)
+
+    plt.savefig(f'plotIncome/{col}.png')
+
