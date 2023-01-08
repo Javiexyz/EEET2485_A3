@@ -2,6 +2,8 @@ import random
 
 import pandas as pd
 import scipy.stats as stats
+import numpy as np
+import matplotlib.pyplot as plt
 
 data = pd.read_csv("data_clean/dataclean.csv")
 
@@ -24,9 +26,6 @@ else:
     print("we accept null hypothesis")
 
 # Anova Test: Average working hours versus education level
-# print(rp.summary_cont(data['Work hours per week']))
-# print(rp.summary_cont(data['Work hours per week'].groupby(data['Education'])))
-
 print(data['Work hours per week'][data['Education'] == 'Preschool'].sample(50, replace=False))
 
 statistic, pvalue = stats.f_oneway(data['Work hours per week'][data['Education'] == 'Preschool'].sample(50, replace=False),
@@ -48,6 +47,13 @@ statistic, pvalue = stats.f_oneway(data['Work hours per week'][data['Education']
 
 print("f-statistic:" + str(statistic))
 print("p-value:" + str(pvalue))
+
+# Plotting for ANOVA Test
+edus = data['Education'].unique()
+for edu in edus:
+    stats.probplot(data[data['Education'] == edu]['Work hours per week'].sample(50, replace=False), dist="norm", plot=plt)
+    plt.title("Probability Plot - " +  edu)
+    plt.show()
 
 
 
