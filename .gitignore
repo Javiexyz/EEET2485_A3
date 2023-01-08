@@ -160,6 +160,8 @@ cython_debug/
 data_record/
 data_clean/
 plot/
-plotIncome/
+plot_cat_ncome/
+plot_box_income/
+plot_box_income_gender/
 
 *.png
