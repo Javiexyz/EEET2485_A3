@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
 
@@ -23,26 +24,62 @@ dataClean.loc[dataClean['Income'].astype(str) == '<=50K', 'Income'] = '0'
 dataClean.loc[dataClean['Native country'].astype(str) == '?', 'Native country'] = mostFreqCountry
 
 dataClean.drop(dataClean[dataClean['Occupation'].astype(str).str.isdigit()].index, inplace=True)
-dataClean.drop(dataClean.tail(1).index, inplace=True)
+dataClean.dropna(inplace=True)
 
 dataClean.to_csv("data_clean/dataclean.csv")
 
 # ---------- Plot data ---------- #
 
-plotArray = ["Workclass", "Age", "Occupation", "Work hours per week"]
-for item in plotArray:
-    var, count = np.unique(dataClean[f'{item}'], return_counts = True)
-    plt.figure(figsize=(32, 8))
-    plt.title(f'{item} plot')
-    plt.bar(var, count)
-    plt.savefig(f'plot/{item}.png')
+useHistplot = ["Age"]
+hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
+hasExtraHeight = ["Native country"]
+hasVerticalLabel = ["Native country"]
+hasCount = ["Workclass", "Race", "Work hours per week", "Other asset"]
 
-workclassVar, workclassCount = np.unique(dataClean['Workclass'].astype(str), return_counts = True)
-plt.figure(figsize=(15, 10))
-plt.title('Workclass plot')
-plt.bar(workclassVar, workclassCount)
-for index, value in enumerate(workclassCount):
-    plt.text(index, value,
-             str(value))
+for item in dataClean.columns.values:
 
-plt.savefig('plot/workclass.png')
+    if (item in hasBinaryLabel):
+        var, count = np.unique(dataClean[f'{item}'].astype(str), return_counts = True)
+    else:
+        var, count = np.unique(dataClean[f'{item}'], return_counts = True)
+
+    # Set size of the plot
+    if (item in hasBinaryLabel):
+        figSize=(7, 7)
+    elif (item in hasExtraHeight): 
+        figSize=(12, 19)
+    else:
+        figSize=(16, 9)
+
+    sns.set_palette("Set2")
+
+    # Common
+    fig, ax = plt.subplots(figsize=figSize)
+    ax.set_title(f'{item} plot')
+
+    if (item in useHistplot):
+        sns.histplot(data=dataClean[f'{item}'], binwidth=1, kde=True)
+    else:
+        sns.barplot(x=var, y=count)
+
+    # Conditional addition
+
+    if (item in hasVerticalLabel):
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
+
+    if (item in hasCount):
+        for index, value in enumerate(count):
+            plt.text(index, value, str(value))
+
+    # Save to image
+    fig.savefig(f'plot/{item}.png')
+
+# workclassVar, workclassCount = np.unique(dataClean['Workclass'].astype(str), return_counts = True)
+# plt.figure(figsize=(15, 10))
+# plt.title('Workclass plot')
+# plt.bar(workclassVar, workclassCount)
+# for index, value in enumerate(workclassCount):
+#     plt.text(index, value,
+#              str(value))
+
+# plt.savefig('plot/workclass.png')
