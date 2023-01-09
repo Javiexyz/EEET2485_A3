@@ -85,17 +85,17 @@ for item in dataClean.columns.values:
 
     # Save to image
     fig.savefig(f'plot/{item}.png')
+    plt.close()
+
+# ---------- Categorical plot ---------- #
 
 dataClean_categorical = dataClean.select_dtypes(exclude=['float'])
-
-sns.set_theme(style="darkgrid")
-sns.set_palette("Set2")
 
 for col in dataClean_categorical.columns:
     g = sns.catplot(x=col, hue='Income',
                 data=dataClean, kind="count",
                 height=8, aspect=1.7)
-    g.fig.set_size_inches(15, 8)
+    g.fig.set_size_inches(16, 9)
     
     for ax in g.axes.ravel():
     # add annotations
@@ -104,5 +104,68 @@ for col in dataClean_categorical.columns:
             ax.bar_label(c, labels=labels, label_type='edge')
             ax.margins(y=0.2)
 
-    plt.savefig(f'plotIncome/{col}.png')
+    plt.savefig(f'plot_cat_income/{col}.png')
+    plt.close()
 
+# ---------- Box plot ---------- #
+
+data_boxplot = dataClean[['Age', 'Work hours per week']].astype(int)
+for item in data_boxplot.columns:
+    plt.figure(figsize=(16, 9))
+    sns.boxplot(x=dataClean['Income'], y=f'{item}', data=data_boxplot)
+    plt.savefig(f'plot_box_income/{item}.png')
+    plt.close()
+
+    plt.figure(figsize=(16, 9))
+    sns.boxplot(x=dataClean['Income'], y=f'{item}', data=data_boxplot, hue=dataClean['Gender'])
+    plt.savefig(f'plot_box_income_gender/{item}.png')
+    plt.close()
+
+# ---------- Preprocessing categorical data (Extra) ---------- #
+
+dataExtra = dataClean.copy()
+
+dataExtra['Education'].replace("Preschool", "Dropout", regex=True, inplace=True)
+dataExtra['Education'].replace("10th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("11th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("12th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("1st-4th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("5th-6th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("7th-8th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("9th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("HS-Grad", "HighGrad",regex=True, inplace=True)
+dataExtra['Education'].replace("HS-grad", "HighGrad",regex=True, inplace=True)
+dataExtra['Education'].replace("Some-college", "CommunityCollege",regex=True, inplace=True)
+dataExtra['Education'].replace("Assoc-acdm", "CommunityCollege",regex=True, inplace=True)
+dataExtra['Education'].replace("Assoc-voc", "CommunityCollege",regex=True, inplace=True)
+dataExtra['Education'].replace("Bachelors", "Bachelors",regex=True, inplace=True)
+dataExtra['Education'].replace("Masters", "Masters",regex=True, inplace=True)
+dataExtra['Education'].replace("Prof-school", "Masters",regex=True, inplace=True)
+dataExtra['Education'].replace("Doctorate", "Doctorate",regex=True, inplace=True)
+
+dataExtra.to_csv("data_clean/dataextra.csv")
+
+# ---------- Extra plot ---------- #
+
+var, count = np.unique(dataExtra['Education'], return_counts = True)
+
+fig, ax = plt.subplots(figsize=(16, 9))
+ax.set_title('Education extra plot')
+sns.barplot(x=var, y=count)
+fig.savefig('plot/Education_extra.png')
+plt.close()
+
+g = sns.catplot(x='Education', hue='Income',
+                data=dataExtra, kind="count",
+                height=8, aspect=1.7)
+g.fig.set_size_inches(16, 9)
+    
+for ax in g.axes.ravel():
+    # add annotations
+    for c in ax.containers:
+        labels = [f'{(v.get_height() / 1000):.1f}K' for v in c]
+        ax.bar_label(c, labels=labels, label_type='edge')
+        ax.margins(y=0.2)
+
+plt.savefig('plot_cat_income/Education_extra.png')
+plt.close()
