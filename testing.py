@@ -53,6 +53,7 @@ edus = data['Education'].unique()
 for edu in edus:
     stats.probplot(data[data['Education'] == edu]['Work hours per week'].sample(50, replace=False), dist="norm", plot=plt)
     plt.title("Probability Plot - " +  edu)
+    plt.savefig(f'anova_plot_wh_eduLevel/{edu}.png')
     plt.show()
 
 
