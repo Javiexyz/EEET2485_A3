@@ -40,8 +40,13 @@ sns.set_palette("Set2")
 
 useHistplot = ["Age", 'Work hours per week']
 hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
+<<<<<<< HEAD
 hasExtraHeight = ["Native country",'Occupation']
 hasVerticalLabel = ["Native country","Occupation"]
+=======
+hasExtraHeight = ["Native country"]
+hasVerticalLabel = ["Native country", "Occupation"]
+>>>>>>> ce5e3654e15b6061d5f616abc3c39ee6d4441504
 hasCount = ["Workclass", "Race", "Other asset"]
 
 for item in dataClean.columns.values:
@@ -57,7 +62,7 @@ for item in dataClean.columns.values:
     elif (item in hasExtraHeight): 
         figSize=(12, 19)
     else:
-        figSize=(16, 9)
+        figSize=(16, 15)
 
     # Common
     fig, ax = plt.subplots(figsize=figSize)
@@ -104,6 +109,7 @@ for col in dataClean_categorical.columns:
             ax.bar_label(c, labels=labels, label_type='edge')
             ax.margins(y=0.2)
 
+    plt.title(col + " versus income")
     plt.savefig(f'plot_cat_income/{col}.png')
     plt.close()
 
@@ -113,11 +119,13 @@ data_boxplot = dataClean[['Age', 'Work hours per week']].astype(int)
 for item in data_boxplot.columns:
     plt.figure(figsize=(16, 9))
     sns.boxplot(x=dataClean['Income'], y=f'{item}', data=data_boxplot)
+    plt.title(col + " versus income (boxplot)")
     plt.savefig(f'plot_box_income/{item}.png')
     plt.close()
 
     plt.figure(figsize=(16, 9))
     sns.boxplot(x=dataClean['Income'], y=f'{item}', data=data_boxplot, hue=dataClean['Gender'])
+    plt.title(col + "versus income for each gender")
     plt.savefig(f'plot_box_income_gender/{item}.png')
     plt.close()
 
