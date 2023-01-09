@@ -78,7 +78,7 @@ from scipy.stats import chi2
 
 # # Property vs Marital
 # #data_cont = pd.crosstab(dataClean['Martial status'].sample(frac=0.005, replace=True, random_state=1),dataClean['Property owner'].sample(frac=0.005, replace=True, random_state=1),margins = False)
-# data_cont = pd.crosstab(dataClean['Property owner'], dataClean['Martial status'], margins = False)
+# data_cont = pd.crosstab(dataClean['Education'], dataClean['Education (Year)'], margins = False)
 # print(data_cont)
 # stat, p, dof, expected = chi2_contingency(data_cont)
 # print('dof=%d' % dof)
@@ -100,24 +100,9 @@ from scipy.stats import ttest_ind
 
 data_test = dataClean[['Age','Work hours per week','Income']].astype(int)
 
-# #Age vs Income
-# group_income1 = data_test[data_test['Income']==1]['Age']
-# group_income0 = data_test[data_test['Income']==0]['Age']
-
-# group_income0 = random.sample(sorted(group_income0), 7000)
-# group_income1 = random.sample(sorted(group_income1), 7000)
-
-# ttest,pval = ttest_ind(group_income1,group_income0,equal_var = False)
-# print("ttest",ttest)
-# print('p value',pval)
-# if pval <0.05:
-#     print("we reject null hypothesis")
-# else:
-#     print("we accept null hypothesis")
-
-#Working hours vs Income
-group_income1 = data_test[data_test['Income']==1]['Work hours per week']
-group_income0 = data_test[data_test['Income']==0]['Work hours per week']
+#Age vs Income
+group_income1 = data_test[data_test['Income']==1]['Age']
+group_income0 = data_test[data_test['Income']==0]['Age']
 
 group_income0 = random.sample(sorted(group_income0), 7000)
 group_income1 = random.sample(sorted(group_income1), 7000)
@@ -129,3 +114,18 @@ if pval <0.05:
     print("we reject null hypothesis")
 else:
     print("we accept null hypothesis")
+
+# #Working hours vs Income
+# group_income1 = data_test[data_test['Income']==1]['Work hours per week']
+# group_income0 = data_test[data_test['Income']==0]['Work hours per week']
+
+# group_income0 = random.sample(sorted(group_income0), 7000)
+# group_income1 = random.sample(sorted(group_income1), 7000)
+
+# ttest,pval = ttest_ind(group_income1,group_income0,equal_var = False)
+# print("ttest",ttest)
+# print('p value',pval)
+# if pval <0.05:
+#     print("we reject null hypothesis")
+# else:
+#     print("we accept null hypothesis")

@@ -40,16 +40,16 @@ sns.set_palette("Set2")
 
 useHistplot = ["Age", 'Work hours per week']
 hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
-hasExtraHeight = ["Native country"]
-hasVerticalLabel = ["Native country"]
+hasExtraHeight = ["Native country",'Occupation']
+hasVerticalLabel = ["Native country","Occupation"]
 hasCount = ["Workclass", "Race", "Other asset"]
 
 for item in dataClean.columns.values:
 
-    # if (item in hasBinaryLabel):
-    #     var, count = np.unique(dataClean[f'{item}'].astype(str), return_counts = True)
-    # else:
-    var, count = np.unique(dataClean[f'{item}'], return_counts = True)
+    if (item in hasBinaryLabel):
+        var, count = np.unique(dataClean[f'{item}'].astype(str), return_counts = True)
+    else:
+        var, count = np.unique(dataClean[f'{item}'], return_counts = True)
 
     # Set size of the plot
     if (item in hasBinaryLabel):
