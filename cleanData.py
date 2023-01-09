@@ -41,7 +41,7 @@ sns.set_palette("Set2")
 useHistplot = ["Age", 'Work hours per week']
 hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
 hasExtraHeight = ["Native country"]
-hasVerticalLabel = ["Native country"]
+hasVerticalLabel = ["Native country", "Occupation"]
 hasCount = ["Workclass", "Race", "Other asset"]
 
 for item in dataClean.columns.values:
@@ -57,7 +57,7 @@ for item in dataClean.columns.values:
     elif (item in hasExtraHeight): 
         figSize=(12, 19)
     else:
-        figSize=(16, 9)
+        figSize=(16, 15)
 
     # Common
     fig, ax = plt.subplots(figsize=figSize)
