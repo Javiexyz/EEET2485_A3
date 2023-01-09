@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import scipy.stats as ss
+import random
 
 data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
 
@@ -54,7 +55,7 @@ dataClean.to_csv("data_clean/dataclean.csv")
 
 #         plt.savefig(f'plotIncome/{col}.png')
 
-# Chi-square test
+## Chi-square test
 from scipy.stats import chi2_contingency
 from scipy.stats import chi2
 
@@ -75,19 +76,56 @@ from scipy.stats import chi2
 # else:
 #     print('Independent (fail to reject H0)')
 
-# Property vs Marital
-#data_cont = pd.crosstab(dataClean['Martial status'].sample(frac=0.005, replace=True, random_state=1),dataClean['Property owner'].sample(frac=0.005, replace=True, random_state=1),margins = False)
-data_cont = pd.crosstab(dataClean['Property owner'], dataClean['Martial status'], margins = False)
-print(data_cont)
-stat, p, dof, expected = chi2_contingency(data_cont)
-print('dof=%d' % dof)
-print('p_value', p)
-print(expected)
-# interpret test-statistic
-prob = 0.95
-critical = chi2.ppf(prob, dof)
-print('probability=%.3f, critical=%.3f, stat=%.3f' % (prob, critical, stat))
-if abs(stat) >= critical:
-    print('Dependent (reject H0)')
+# # Property vs Marital
+# #data_cont = pd.crosstab(dataClean['Martial status'].sample(frac=0.005, replace=True, random_state=1),dataClean['Property owner'].sample(frac=0.005, replace=True, random_state=1),margins = False)
+# data_cont = pd.crosstab(dataClean['Property owner'], dataClean['Martial status'], margins = False)
+# print(data_cont)
+# stat, p, dof, expected = chi2_contingency(data_cont)
+# print('dof=%d' % dof)
+# print('p_value', p)
+# print(expected)
+# # interpret test-statistic
+# prob = 0.95
+# critical = chi2.ppf(prob, dof)
+# print('probability=%.3f, critical=%.3f, stat=%.3f' % (prob, critical, stat))
+# if abs(stat) >= critical:
+#     print('Dependent (reject H0)')
+# else:
+#     print('Independent (fail to reject H0)')
+
+
+## Independent sample T-test
+from scipy.stats import ttest_ind
+
+
+data_test = dataClean[['Age','Work hours per week','Income']].astype(int)
+
+# #Age vs Income
+# group_income1 = data_test[data_test['Income']==1]['Age']
+# group_income0 = data_test[data_test['Income']==0]['Age']
+
+# group_income0 = random.sample(sorted(group_income0), 7000)
+# group_income1 = random.sample(sorted(group_income1), 7000)
+
+# ttest,pval = ttest_ind(group_income1,group_income0,equal_var = False)
+# print("ttest",ttest)
+# print('p value',pval)
+# if pval <0.05:
+#     print("we reject null hypothesis")
+# else:
+#     print("we accept null hypothesis")
+
+#Working hours vs Income
+group_income1 = data_test[data_test['Income']==1]['Work hours per week']
+group_income0 = data_test[data_test['Income']==0]['Work hours per week']
+
+group_income0 = random.sample(sorted(group_income0), 7000)
+group_income1 = random.sample(sorted(group_income1), 7000)
+
+ttest,pval = ttest_ind(group_income1,group_income0,equal_var = False)
+print("ttest",ttest)
+print('p value',pval)
+if pval <0.05:
+    print("we reject null hypothesis")
 else:
-    print('Independent (fail to reject H0)')
+    print("we accept null hypothesis")
