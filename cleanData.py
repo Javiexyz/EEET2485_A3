@@ -104,6 +104,7 @@ for col in dataClean_categorical.columns:
             ax.bar_label(c, labels=labels, label_type='edge')
             ax.margins(y=0.2)
 
+    plt.title(col + " versus income")
     plt.savefig(f'plot_cat_income/{col}.png')
     plt.close()
 
@@ -113,11 +114,13 @@ data_boxplot = dataClean[['Age', 'Work hours per week']].astype(int)
 for item in data_boxplot.columns:
     plt.figure(figsize=(16, 9))
     sns.boxplot(x=dataClean['Income'], y=f'{item}', data=data_boxplot)
+    plt.title(col + " versus income (boxplot)")
     plt.savefig(f'plot_box_income/{item}.png')
     plt.close()
 
     plt.figure(figsize=(16, 9))
     sns.boxplot(x=dataClean['Income'], y=f'{item}', data=data_boxplot, hue=dataClean['Gender'])
+    plt.title(col + "versus income for each gender")
     plt.savefig(f'plot_box_income_gender/{item}.png')
     plt.close()
 
