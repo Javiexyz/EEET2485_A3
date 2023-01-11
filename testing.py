@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 
-data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
+dt = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
+data = pd.read_csv('data_clean/dataclean.csv')
 
 # ---------- Clean data ---------- #
 
-dataClean = data.copy()
+dataClean = dt.copy()
 
 # Drop
 dataClean.dropna(inplace=True)
@@ -59,37 +60,7 @@ for col in dataClean_categorical.columns:
 from scipy.stats import chi2_contingency
 from scipy.stats import chi2
 
-# Q7: Is there any association between property and marital status?
-data_cont = pd.crosstab(dataClean['Martial status'].sample(frac=0.005, replace=True, random_state=1),
-                        dataClean['Property owner'].sample(frac=0.005, replace=True, random_state=1),
-                        margins = False)
-stat, p, dof, expected = chi2_contingency(data_cont)
-print('Q7: Is there any association between property and marital status?')
-print('degree of freedom = %d' % dof)
-print('p_value', p)
-# interpret test-statistic
-prob = 0.95
-critical = chi2.ppf(prob, dof)
-if abs(stat) >= critical:
-    print('Dependent (reject H0)')
-else:
-    print('Independent (fail to reject H0)')
-
-# Q8: Is there any association between saving and property owner?
-data_cont = pd.crosstab(dataClean['Saving (Cash)'],dataClean['Property owner'],margins = False)
-stat, p, dof, expected = chi2_contingency(data_cont)
-print('Q8: Is there any association between saving and property owner?')
-print('degree of freedom = %d' % dof)
-print('p_value', p)
-# interpret test-statistic
-prob = 0.95
-critical = chi2.ppf(prob, dof)
-if abs(stat) >= critical:
-    print('Dependent (reject H0)')
-else:
-    print('Independent (fail to reject H0)')
-
-chi_vars_income= ['Gender', 'Race', 'Workclass', 'Education', 'Occupation', 'Martial status', 'Family Role', 'Property owner', 'Saving (Cash)', 'Other asset']
+chi_vars_income= ['Gender', 'Race', 'Workclass', 'Education', 'Occupation', 'Martial status', 'Family Role', 'Property owner', 'Other asset']
 
 for var in chi_vars_income:
     data_cont = pd.crosstab(dataClean[var], dataClean['Income'], margins=False)
@@ -103,7 +74,7 @@ for var in chi_vars_income:
     else:
         print('Income is independent (fail to reject H0) to ' + var + '\n')
 
-chi_vars_prop= ['Gender', 'Race', 'Workclass', 'Education', 'Occupation', 'Martial status', 'Family Role', 'Income', 'Saving (Cash)', 'Other asset']
+chi_vars_prop= ['Gender', 'Race', 'Workclass', 'Education', 'Occupation', 'Martial status', 'Family Role', 'Income', 'Other asset']
 
 for var in chi_vars_prop:
     data_cont = pd.crosstab(dataClean[var], dataClean['Income'], margins=False)
@@ -117,11 +88,25 @@ for var in chi_vars_prop:
     else:
         print('Property owner is independent (fail to reject H0) to ' + var + '\n')
 
+chi_vars_asset= ['Gender', 'Race', 'Workclass', 'Education', 'Occupation', 'Martial status', 'Family Role', 'Property owner', 'Income']
+
+for var in chi_vars_asset:
+    data_cont = pd.crosstab(dataClean[var], dataClean['Income'], margins=False)
+    stat, p, dof, expected = chi2_contingency(data_cont)
+    print('degree of freedom =', dof, ' and p_value = ', p)
+    # interpret test-statistic
+    prob = 0.95
+    critical = chi2.ppf(prob, dof)
+    if abs(stat) >= critical:
+        print('Other asset is dependent (reject H0) to ' + var + '\n')
+    else:
+        print('Other asset is independent (fail to reject H0) to ' + var + '\n')
+
 # Independent sample T-test
 from scipy.stats import ttest_ind
-data_test = dataClean[['Age','Work hours per week','Income']].astype(int)
+data_test = dataClean[['Age','Work hours per week','Income', 'Saving (Cash)']].astype(int)
 
-t_test_income = ['Age', 'Work hours per week']
+t_test_income = ['Age', 'Work hours per week', 'Saving (Cash)']
 for t in t_test_income:
     group_income1 = data_test[data_test['Income'] == 1][t]
     group_income0 = data_test[data_test['Income'] == 0][t]
@@ -137,7 +122,7 @@ for t in t_test_income:
     else:
         print('accept null hypothesis -> ', t, ' and income are independent \n')
 
-t_test_prop = ['Age', 'Work hours per week']
+t_test_prop = ['Age', 'Work hours per week', 'Saving (Cash)']
 for t in t_test_prop:
     group_income1 = data_test[data_test['Income'] == 1][t]
     group_income0 = data_test[data_test['Income'] == 0][t]

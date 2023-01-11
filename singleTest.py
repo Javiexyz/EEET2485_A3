@@ -30,3 +30,19 @@
 #     print("we reject null hypothesis \n")
 # else:
 #     print("we accept null hypothesis \n")
+
+# Q7: Is there any association between property and marital status?
+# data_cont = pd.crosstab(dataClean['Martial status'].sample(frac=0.005, replace=True, random_state=1),
+#                         dataClean['Property owner'].sample(frac=0.005, replace=True, random_state=1),
+#                         margins = False)
+# stat, p, dof, expected = chi2_contingency(data_cont)
+# print('Q7: Is there any association between property and marital status?')
+# print('degree of freedom = %d' % dof)
+# print('p_value', p)
+# # interpret test-statistic
+# prob = 0.95
+# critical = chi2.ppf(prob, dof)
+# if abs(stat) >= critical:
+#     print('Dependent (reject H0)')
+# else:
+#     print('Independent (fail to reject H0)')
