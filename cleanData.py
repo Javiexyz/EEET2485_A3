@@ -40,13 +40,8 @@ sns.set_palette("Set2")
 
 useHistplot = ["Age", 'Work hours per week']
 hasBinaryLabel = ["Property owner", "Other asset", "Gender", "Income"]
-<<<<<<< HEAD
-hasExtraHeight = ["Native country",'Occupation']
-hasVerticalLabel = ["Native country","Occupation"]
-=======
 hasExtraHeight = ["Native country"]
 hasVerticalLabel = ["Native country", "Occupation"]
->>>>>>> ce5e3654e15b6061d5f616abc3c39ee6d4441504
 hasCount = ["Workclass", "Race", "Other asset"]
 
 for item in dataClean.columns.values:
@@ -66,7 +61,7 @@ for item in dataClean.columns.values:
 
     # Common
     fig, ax = plt.subplots(figsize=figSize)
-    ax.set_title(f'{item} plot')
+    ax.set_title(f'{item} plot', fontsize=35)
 
     if (item in useHistplot):
         if (item == 'Work hours per week'):

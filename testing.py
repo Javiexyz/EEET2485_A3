@@ -1,8 +1,8 @@
-import random
 
+
+import random
 import pandas as pd
 import scipy.stats as stats
-import numpy as np
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("data_clean/dataclean.csv")
@@ -12,13 +12,13 @@ m50 = data[data['Income'] == 1]['Work hours per week']
 l50 = data[data['Income'] == 0]['Work hours per week']
 
 m50 = m50.values.tolist()
-m50 = random.sample(m50, 600)
+m50 = random.sample(sorted(m50), 7000)
 l50 = l50.values.tolist()
-l50 = random.sample(l50, 600)
+l50 = random.sample(sorted(l50), 7000)
 
-ttest,pval = stats.ttest_ind(m50,l50,equal_var = False)
+ttest,pval = stats.ttest_ind(m50, l50, equal_var = False)
 print("ttest",ttest)
-print('p value',format(pval, '.70f'))
+print('p value',pval)
 
 if pval <0.05:
     print("we reject null hypothesis")
@@ -26,7 +26,7 @@ else:
     print("we accept null hypothesis")
 
 # Anova Test: Average working hours versus education level
-print(data['Work hours per week'][data['Education'] == 'Preschool'].sample(50, replace=False))
+# print(data['Work hours per week'][data['Education'] == 'Preschool'].sample(50, replace=False))
 
 statistic, pvalue = stats.f_oneway(data['Work hours per week'][data['Education'] == 'Preschool'].sample(50, replace=False),
                                    data['Work hours per week'][data['Education'] == '1st-4th'].sample(50, replace=False),
