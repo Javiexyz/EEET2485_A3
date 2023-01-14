@@ -7,10 +7,6 @@ import random
 from scipy.stats import chi2_contingency
 from scipy.stats import chi2
 
-# Numerical + categorical -> t-test
-# Chi-square -> 2 categorical
-# ANOVA test -> 2 numerical
-
 # ---------- Clean data ---------- #
 data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
 dataClean = data.copy()
@@ -48,27 +44,27 @@ evaluate = ['Income', 'Saving (Cash)', 'Property owner', 'Other asset']
 dataClean_categorical = dataClean.select_dtypes(exclude=['float'])
 dataClean_categorical.insert(0, 'Education (Year)', dataClean['Education (Year)'])
 
-# # Plotting diagram
-# for e in evaluate:
-#     for f in factors:
-#         g = sns.catplot(x=f, hue=e,
-#                         data=dataClean, kind='count',
-#                         height=8, aspect=2)
-#         g.fig.set_size_inches(30, 15)
-#         sns.set(font_scale=3)
-#
-#         for ax in g.axes.ravel():
-#             # add annotations
-#             for c in ax.containers:
-#                 if (f == 'Income'):
-#                     labels = [f'{(v.get_height() / 10):.1f}K' for v in c]
-#                     ax.bar_label(c, labels=labels, label_type='edge')
-#             if (f in long_factors):
-#                 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
-#
-#         plt.title(f'{f} vs {e} plot')
-#         plt.tick_params(axis='both', which='major', labelsize=14)
-#         plt.savefig(f'evaluateFactor/{f} vs {e}.png')
+# Plotting diagram
+for e in evaluate:
+    for f in factors:
+        g = sns.catplot(x=f, hue=e,
+                        data=dataClean, kind='count',
+                        height=8, aspect=2)
+        g.fig.set_size_inches(30, 15)
+        sns.set(font_scale=3)
+
+        for ax in g.axes.ravel():
+            # add annotations
+            for c in ax.containers:
+                if (f == 'Income'):
+                    labels = [f'{(v.get_height() / 10):.1f}K' for v in c]
+                    ax.bar_label(c, labels=labels, label_type='edge')
+            if (f in long_factors):
+                ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
+
+        plt.title(f'{f} vs {e} plot')
+        plt.tick_params(axis='both', which='major', labelsize=14)
+        plt.savefig(f'evaluateFactor/{f} vs {e}.png')
 
 # Question Testing
 
@@ -167,23 +163,20 @@ for f in factors:
 
 # Anova Test: Average working hours versus education level
 # Q10:  What is the difference in average working hours among types of edu levels? - ANOVA
-# statistic, pvalue = stats.f_oneway(dataClean['Work hours per week'][dataClean['Education'] == 'Dropout'].head(2000),
-#                                     dataClean['Work hours per week'][dataClean['Education'] == 'HS-grad'].head(2000),
-#                                     dataClean['Work hours per week'][dataClean['Education'] == 'CommunityCollege'].head(2000),
-#                                     dataClean['Work hours per week'][dataClean['Education'] == 'Bachelor'].head(2000),
-#                                     dataClean['Work hours per week'][dataClean['Education'] == 'Postgrad'].head(2000))
 
-education_level = dataExtra["Education"]
-for column in education_level:
-    print("Education Level")
-    count = education_level.value_counts()
-    percent = education_level.value_counts(normalize=True).mul(100).round(2).astype(str) + '%'
-    edus_dataframe = pd.DataFrame({'Counts': count, 'Percent': percent})
-    edus_dataframe.to_csv('data_record/education_level_drop.csv')
-    print(pd.DataFrame({'Counts': count, 'Percent': percent}))
-    print('--------------------------------')
-    break
-
+# Group Education levels in 5 categories
+dropout = dataExtra['Work hours per week'][dataExtra['Education'] == 'Dropout'].head(2000)
+hsgrad = dataExtra['Work hours per week'][dataExtra['Education'] == 'HS-grad'].head(2000)
+community = dataExtra['Work hours per week'][dataExtra['Education'] == 'CommunityCollege'].head(2000)
+bachelors = dataExtra['Work hours per week'][dataExtra['Education'] == 'Bachelors'].head(2000)
+postgrad = dataExtra['Work hours per week'][dataExtra['Education'] == 'Postgrad'].head(2000)
+# Save them to csv file to test in jamovi
+dropout.to_csv('data_clean/dropout.csv')
+hsgrad.to_csv('data_clean/hsgrad.csv')
+community.to_csv('data_clean/com.csv')
+bachelors.to_csv('data_clean/bsc.csv')
+postgrad.to_csv('data_clean/postgrad.csv')
+# test ANOVA using Python library package scipy.stats
 statistic, pvalue = stats.f_oneway(dataExtra['Work hours per week'][dataExtra['Education'] == 'Dropout'].head(2000),
                                     dataExtra['Work hours per week'][dataExtra['Education'] == 'HS-grad'].head(2000),
                                     dataExtra['Work hours per week'][dataExtra['Education'] == 'CommunityCollege'].head(2000),
@@ -193,11 +186,11 @@ print('Q10:  What is the difference in average working hours among types of edu 
 print("f-statistic:" + str(statistic))
 print("p-value:" + str(pvalue))
 
-# # Plotting for ANOVA Test
-# edus = dataClean['Education'].unique()
-# for edu in edus:
-#     stats.probplot(dataClean[dataClean['Education'] == edu]['Work hours per week'].sample(50, replace=False), dist="norm", plot=plt)
-#     plt.title("Probability Plot - " +  edu)
-#     plt.savefig(f'anova_plot_wh_eduLevel/{edu}.png')
-#     plt.show()
+# Plotting for ANOVA Test
+edus = dataClean['Education'].unique()
+for edu in edus:
+    stats.probplot(dataClean[dataClean['Education'] == edu]['Work hours per week'].sample(50, replace=False), dist="norm", plot=plt)
+    plt.title("Probability Plot - " +  edu)
+    plt.savefig(f'anova_plot_wh_eduLevel/{edu}.png')
+    # plt.show()
 

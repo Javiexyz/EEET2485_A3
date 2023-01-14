@@ -54,7 +54,7 @@ for item in dataClean.columns.values:
     # Set size of the plot
     if (item in hasBinaryLabel):
         figSize=(7, 7)
-    elif (item in hasExtraHeight): 
+    elif (item in hasExtraHeight):
         figSize=(12, 19)
     else:
         figSize=(16, 15)
@@ -96,7 +96,7 @@ for col in dataClean_categorical.columns:
                 data=dataClean, kind="count",
                 height=8, aspect=1.7)
     g.fig.set_size_inches(16, 9)
-    
+
     for ax in g.axes.ravel():
     # add annotations
         for c in ax.containers:
@@ -126,7 +126,7 @@ for item in data_boxplot.columns:
 
 # ---------- Preprocessing categorical data (Extra) ---------- #
 
-dataExtra = dataClean.copy()
++dataExtra = dataClean.copy()
 
 dataExtra['Education'].replace("Preschool", "Dropout", regex=True, inplace=True)
 dataExtra['Education'].replace("10th", "Dropout",regex=True, inplace=True)
@@ -136,16 +136,17 @@ dataExtra['Education'].replace("1st-4th", "Dropout",regex=True, inplace=True)
 dataExtra['Education'].replace("5th-6th", "Dropout",regex=True, inplace=True)
 dataExtra['Education'].replace("7th-8th", "Dropout",regex=True, inplace=True)
 dataExtra['Education'].replace("9th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("HS-Grad", "HighGrad",regex=True, inplace=True)
+dataExtra['Education'].replace("HS-grad", "HighGrad",regex=True, inplace=True)
 dataExtra['Education'].replace("Some-college", "CommunityCollege",regex=True, inplace=True)
 dataExtra['Education'].replace("Assoc-acdm", "CommunityCollege",regex=True, inplace=True)
 dataExtra['Education'].replace("Assoc-voc", "CommunityCollege",regex=True, inplace=True)
 dataExtra['Education'].replace("Bachelors", "Bachelors",regex=True, inplace=True)
-dataExtra['Education'].replace("Masters", "Postgrad",regex=True, inplace=True)
-dataExtra['Education'].replace("Prof-school", "Postgrad",regex=True, inplace=True)
-dataExtra['Education'].replace("Doctorate", "Postgrad",regex=True, inplace=True)
+dataExtra['Education'].replace("Masters", "Masters",regex=True, inplace=True)
+dataExtra['Education'].replace("Prof-school", "Masters",regex=True, inplace=True)
+dataExtra['Education'].replace("Doctorate", "Doctorate",regex=True, inplace=True)
 
 dataExtra.to_csv("data_clean/dataextra.csv")
-
 # ---------- Extra plot ---------- #
 
 var, count = np.unique(dataExtra['Education'], return_counts = True)
@@ -160,7 +161,7 @@ g = sns.catplot(x='Education', hue='Income',
                 data=dataExtra, kind="count",
                 height=8, aspect=1.7)
 g.fig.set_size_inches(16, 9)
-    
+
 for ax in g.axes.ravel():
     # add annotations
     for c in ax.containers:
