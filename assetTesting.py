@@ -34,7 +34,7 @@ dataClean['Martial status'] = dataClean['Martial status'].replace(",", "", regex
 
 dataClean.to_csv("data_clean/dataclean.csv")
 
-factors = ['Age', 'Education', 'Workclass', 'Occupation', 'Gender', 'Race', 'Work hours per week']
+factors = ['Age', 'Education', 'Workclass', 'Occupation', 'Gender', 'Race', 'Work hours per week', 'Martial status']
 long_factors = ['Age', 'Education', 'Workclass', 'Occupation', 'Work hours per week']
 evaluate = ['Income', 'Saving (Cash)', 'Property owner', 'Other asset']
 
