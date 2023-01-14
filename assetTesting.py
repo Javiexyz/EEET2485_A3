@@ -7,14 +7,12 @@ import random
 from scipy.stats import chi2_contingency
 from scipy.stats import chi2
 
-data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
-# data = pd.read_csv('data_clean/dataclean.csv')
 # Numerical + categorical -> t-test
 # Chi-square -> 2 categorical
 # ANOVA test -> 2 numerical
 
 # ---------- Clean data ---------- #
-
+data = pd.read_csv("datasets3_csv.csv", sep=";", skipinitialspace=True)
 dataClean = data.copy()
 
 # Drop
@@ -41,9 +39,7 @@ dataClean['Martial status'] = dataClean['Martial status'].replace(",", "", regex
 dataClean.to_csv("data_clean/dataclean.csv")
 
 factors = ['Age', 'Education', 'Workclass', 'Occupation', 'Gender', 'Race', 'Work hours per week']
-
 long_factors = ['Age', 'Education', 'Workclass', 'Occupation', 'Work hours per week']
-
 evaluate = ['Income', 'Saving (Cash)', 'Property owner', 'Other asset']
 
 """---Create lists to contain figures in right order!!!---"""
@@ -52,29 +48,47 @@ evaluate = ['Income', 'Saving (Cash)', 'Property owner', 'Other asset']
 dataClean_categorical = dataClean.select_dtypes(exclude=['float'])
 dataClean_categorical.insert(0, 'Education (Year)', dataClean['Education (Year)'])
 
-# Plotting diagram
-for e in evaluate:
-    for f in factors:
-        g = sns.catplot(x=f, hue=e,
-                        data=dataClean, kind='count',
-                        height=8, aspect=2)
-        g.fig.set_size_inches(30, 15)
-        sns.set(font_scale=3)
-
-        for ax in g.axes.ravel():
-            # add annotations
-            for c in ax.containers:
-                if (f == 'Income'):
-                    labels = [f'{(v.get_height() / 10):.1f}K' for v in c]
-                    ax.bar_label(c, labels=labels, label_type='edge')
-            if (f in long_factors):
-                ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
-
-        plt.title(f'{f} vs {e} plot')
-        plt.tick_params(axis='both', which='major', labelsize=14)
-        plt.savefig(f'evaluateFactor/{f} vs {e}.png')
+# # Plotting diagram
+# for e in evaluate:
+#     for f in factors:
+#         g = sns.catplot(x=f, hue=e,
+#                         data=dataClean, kind='count',
+#                         height=8, aspect=2)
+#         g.fig.set_size_inches(30, 15)
+#         sns.set(font_scale=3)
+#
+#         for ax in g.axes.ravel():
+#             # add annotations
+#             for c in ax.containers:
+#                 if (f == 'Income'):
+#                     labels = [f'{(v.get_height() / 10):.1f}K' for v in c]
+#                     ax.bar_label(c, labels=labels, label_type='edge')
+#             if (f in long_factors):
+#                 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
+#
+#         plt.title(f'{f} vs {e} plot')
+#         plt.tick_params(axis='both', which='major', labelsize=14)
+#         plt.savefig(f'evaluateFactor/{f} vs {e}.png')
 
 # Question Testing
+
+dataExtra = dataClean.copy()
+
+dataExtra['Education'].replace("Preschool", "Dropout", regex=True, inplace=True)
+dataExtra['Education'].replace("10th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("11th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("12th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("1st-4th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("5th-6th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("7th-8th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("9th", "Dropout",regex=True, inplace=True)
+dataExtra['Education'].replace("Some-college", "CommunityCollege",regex=True, inplace=True)
+dataExtra['Education'].replace("Assoc-acdm", "CommunityCollege",regex=True, inplace=True)
+dataExtra['Education'].replace("Assoc-voc", "CommunityCollege",regex=True, inplace=True)
+dataExtra['Education'].replace("Bachelors", "Bachelors",regex=True, inplace=True)
+dataExtra['Education'].replace("Masters", "Postgrad",regex=True, inplace=True)
+dataExtra['Education'].replace("Prof-school", "Postgrad",regex=True, inplace=True)
+dataExtra['Education'].replace("Doctorate", "Postgrad",regex=True, inplace=True)
 
 evaluate_no_saving = ['Income', 'Property owner', 'Other asset']
 t_test_factors = ['Age', 'Work hours per week']
@@ -115,7 +129,7 @@ for e in evaluate_no_saving:
 # Testing for saving:
 for f in factors:
     # ANOVA test
-    if f  in t_test_factors:
+    if f in t_test_factors:
         group_0 = dataClean[dataClean['Saving (Cash)'] == 0][f]
         group_1 = dataClean[dataClean['Saving (Cash)'] == 1][f]
         group_2 = dataClean[dataClean['Saving (Cash)'] == 2][f]
@@ -153,22 +167,28 @@ for f in factors:
 
 # Anova Test: Average working hours versus education level
 # Q10:  What is the difference in average working hours among types of edu levels? - ANOVA
-statistic, pvalue = stats.f_oneway(dataClean['Work hours per week'][dataClean['Education'] == 'Preschool'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '1st-4th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '5th-6th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '7th-8th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '9th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '10th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '11th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == '12th'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'HS-grad'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Bachelors'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Assoc-acdm'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Assoc-voc'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Prof-school'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Some-college'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Masters'].head(50),
-                                    dataClean['Work hours per week'][dataClean['Education'] == 'Doctorate'].head(50))
+# statistic, pvalue = stats.f_oneway(dataClean['Work hours per week'][dataClean['Education'] == 'Dropout'].head(2000),
+#                                     dataClean['Work hours per week'][dataClean['Education'] == 'HS-grad'].head(2000),
+#                                     dataClean['Work hours per week'][dataClean['Education'] == 'CommunityCollege'].head(2000),
+#                                     dataClean['Work hours per week'][dataClean['Education'] == 'Bachelor'].head(2000),
+#                                     dataClean['Work hours per week'][dataClean['Education'] == 'Postgrad'].head(2000))
+
+education_level = dataExtra["Education"]
+for column in education_level:
+    print("Education Level")
+    count = education_level.value_counts()
+    percent = education_level.value_counts(normalize=True).mul(100).round(2).astype(str) + '%'
+    edus_dataframe = pd.DataFrame({'Counts': count, 'Percent': percent})
+    edus_dataframe.to_csv('data_record/education_level_drop.csv')
+    print(pd.DataFrame({'Counts': count, 'Percent': percent}))
+    print('--------------------------------')
+    break
+
+statistic, pvalue = stats.f_oneway(dataExtra['Work hours per week'][dataExtra['Education'] == 'Dropout'].head(2000),
+                                    dataExtra['Work hours per week'][dataExtra['Education'] == 'HS-grad'].head(2000),
+                                    dataExtra['Work hours per week'][dataExtra['Education'] == 'CommunityCollege'].head(2000),
+                                    dataExtra['Work hours per week'][dataExtra['Education'] == 'Bachelors'].head(2000),
+                                    dataExtra['Work hours per week'][dataExtra['Education'] == 'Postgrad'].head(2000))
 print('Q10:  What is the difference in average working hours among types of edu levels? - ANOVA')
 print("f-statistic:" + str(statistic))
 print("p-value:" + str(pvalue))
